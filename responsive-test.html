@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>SkillRack Tracker - Responsive Design Test</title>
+    <style>
+        /* Test styles to verify responsive breakpoints */
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .breakpoint-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .test-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .touch-target {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            min-height: 44px;
+            min-width: 44px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .form-test {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+        }
+        
+        .form-test input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            min-height: 44px;
+        }
+        
+        /* Responsive breakpoint indicators */
+        .breakpoint-indicator::after {
+            content: "Desktop (>768px)";
+        }
+        
+        @media (max-width: 768px) {
+            .breakpoint-indicator::after {
+                content: "Tablet (≤768px)";
+            }
+            
+            .test-container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .test-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .breakpoint-indicator::after {
+                content: "Mobile (≤480px)";
+            }
+            
+            .test-container {
+                padding: 10px;
+                margin: 5px;
+            }
+            
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-test {
+                max-width: 100%;
+            }
+        }
+        
+        /* Touch device specific styles */
+        @media (hover: none) and (pointer: coarse) {
+            .breakpoint-indicator {
+                background: #dc3545;
+            }
+            
+            .breakpoint-indicator::after {
+                content: "Touch Device";
+            }
+            
+            .touch-target:active {
+                transform: scale(0.98);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="breakpoint-indicator"></div>
+    
+    <div class="test-container">
+        <h1>SkillRack Tracker - Responsive Design Test</h1>
+        <p>This page tests the responsive design implementation for the SkillRack Tracker application.</p>
+        
+        <div class="test-section">
+            <h2>Breakpoint Test</h2>
+            <p>The indicator in the top-right corner shows the current breakpoint. Resize your browser window or test on different devices to see the changes.</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Grid Layout Test</h2>
+            <div class="test-grid">
+                <div class="test-item">Item 1</div>
+                <div class="test-item">Item 2</div>
+                <div class="test-item">Item 3</div>
+                <div class="test-item">Item 4</div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Touch Target Test</h2>
+            <p>All buttons should be at least 44px × 44px for proper touch interaction:</p>
+            <button class="touch-target">Button 1</button>
+            <button class="touch-target">Button 2</button>
+            <button class="touch-target">Button 3</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Form Input Test</h2>
+            <p>Inputs should be 16px font size to prevent zoom on iOS:</p>
+            <div class="form-test">
+                <input type="text" placeholder="Test input field">
+                <input type="url" placeholder="URL input field">
+                <button class="touch-target">Submit</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Responsive Features Implemented</h2>
+            <ul>
+                <li>✅ Viewport meta tag with proper scaling</li>
+                <li>✅ Mobile-first responsive breakpoints (480px, 768px, 1024px)</li>
+                <li>✅ Touch-friendly button sizes (min 44px × 44px)</li>
+                <li>✅ 16px font size on inputs to prevent iOS zoom</li>
+                <li>✅ Optimized layouts for different screen sizes</li>
+                <li>✅ Enhanced touch interactions with active states</li>
+                <li>✅ Improved scrolling with -webkit-overflow-scrolling: touch</li>
+                <li>✅ Landscape orientation support</li>
+                <li>✅ High DPI display optimization</li>
+                <li>✅ Reduced motion support for accessibility</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Simple test to verify touch device detection
+        function isTouchDevice() {
+            return (('ontouchstart' in window) ||
+                   (navigator.maxTouchPoints > 0) ||
+                   (navigator.msMaxTouchPoints > 0));
+        }
+        
+        if (isTouchDevice()) {
+            console.log('Touch device detected - mobile optimizations active');
+        } else {
+            console.log('Non-touch device - desktop experience');
+        }
+        
+        // Test viewport dimensions
+        function logViewportInfo() {
+            console.log('Viewport width:', window.innerWidth);
+            console.log('Viewport height:', window.innerHeight);
+            console.log('Device pixel ratio:', window.devicePixelRatio);
+        }
+        
+        logViewportInfo();
+        window.addEventListener('resize', logViewportInfo);
+    </script>
+</body>
+</html>

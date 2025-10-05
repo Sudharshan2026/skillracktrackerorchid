@@ -1,0 +1,322 @@
+/* Enhanced Error Display Component Styles */
+.error-display {
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error Severity Styles */
+.error-display.error {
+  background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+  border: 1px solid #f5c6cb;
+  border-left: 4px solid #dc3545;
+}
+
+.error-display.warning {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 1px solid #ffeaa7;
+  border-left: 4px solid #ffc107;
+}
+
+/* Error Header */
+.error-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.error-title-section {
+  flex: 1;
+}
+
+.error-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.error-message {
+  margin: 0;
+  color: #495057;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.error-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #495057;
+}
+
+/* Error Guidance */
+.error-guidance {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.guidance-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.guidance-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style: none;
+}
+
+.guidance-item {
+  position: relative;
+  margin-bottom: 0.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.guidance-item:before {
+  content: '•';
+  color: #007bff;
+  font-weight: bold;
+  position: absolute;
+  left: -1rem;
+}
+
+.guidance-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Error Actions */
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.retry-button,
+.help-button,
+.contact-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.retry-button {
+  background: #007bff;
+  color: white;
+}
+
+.retry-button:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+.help-button {
+  background: #17a2b8;
+  color: white;
+}
+
+.help-button:hover {
+  background: #138496;
+  transform: translateY(-1px);
+}
+
+.contact-button {
+  background: #6c757d;
+  color: white;
+}
+
+.contact-button:hover {
+  background: #545b62;
+  transform: translateY(-1px);
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 768px) {
+  .error-display {
+    padding: 1rem;
+    margin: 0.75rem 0;
+  }
+  
+  .error-header {
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .error-icon {
+    font-size: 1.25rem;
+  }
+  
+  .error-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .error-message {
+    font-size: 0.9rem;
+  }
+  
+  .error-guidance {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .guidance-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .guidance-item {
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .retry-button,
+  .help-button,
+  .contact-button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    min-height: 44px; /* Enhanced touch target */
+  }
+}
+
+@media (max-width: 480px) {
+  .error-display {
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+  }
+  
+  .error-header {
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .error-title {
+    font-size: 1rem;
+  }
+  
+  .error-message {
+    font-size: 0.85rem;
+  }
+  
+  .error-guidance {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .guidance-title {
+    font-size: 0.85rem;
+  }
+  
+  .guidance-item {
+    font-size: 0.8rem;
+  }
+  
+  .retry-button,
+  .help-button,
+  .contact-button {
+    padding: 0.875rem 1rem;
+    min-height: 48px;
+  }
+}
+
+/* Touch-friendly enhancements */
+@media (hover: none) and (pointer: coarse) {
+  .retry-button:active,
+  .help-button:active,
+  .contact-button:active {
+    transform: scale(0.98);
+  }
+  
+  .error-close:active {
+    transform: scale(0.9);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .error-display.error {
+    background: #fff;
+    border: 2px solid #dc3545;
+  }
+  
+  .error-display.warning {
+    background: #fff;
+    border: 2px solid #ffc107;
+  }
+  
+  .error-guidance {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .error-display {
+    animation: none;
+  }
+  
+  .retry-button:hover,
+  .help-button:hover,
+  .contact-button:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,757 @@
+/* ResultsDisplay Component Styles */
+.results-display {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+  box-sizing: border-box;
+}
+
+.results-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.profile-url {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+  word-break: break-word;
+  padding: var(--space-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.url-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.url-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.url-link:hover {
+  text-decoration: underline;
+}
+
+.results-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.results-section {
+  background: var(--bg-primary);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  transition: var(--transition);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.results-section:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.section-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+  color: var(--text-primary);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.results-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Congratulations Card */
+.congratulations-card {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(40, 167, 69, 0.3);
+  margin-bottom: 2rem;
+}
+
+.congrats-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.congrats-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.congrats-message {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+.congrats-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.congrats-stat {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.stat-value.highlight {
+  color: #fff3cd;
+  font-size: 1.5rem;
+}
+
+.next-goal-suggestion {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-top: 1rem;
+}
+
+/* Goal Summary */
+.goal-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.results-title {
+  text-align: center;
+  color: #495057;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.summary-item {
+  text-align: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #495057;
+}
+
+.summary-value.highlight {
+  color: #28a745;
+  font-size: 1.4rem;
+}
+
+/* Achievement Paths */
+.achievement-paths {
+  margin-bottom: 2rem;
+}
+
+.paths-title {
+  color: #495057;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.paths-subtitle {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.paths-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.path-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.path-card.feasible {
+  border-color: #28a745;
+  background: linear-gradient(135deg, #f8fff9, #e8f5e8);
+}
+
+.path-card.challenging {
+  border-color: #ffc107;
+  background: linear-gradient(135deg, #fffbf0, #fff3cd);
+}
+
+.path-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.path-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.path-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.path-title-section {
+  flex: 1;
+}
+
+.path-title {
+  color: #495057;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.feasibility-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.feasibility-badge.feasible {
+  background: #d4edda;
+  color: #155724;
+}
+
+.feasibility-badge.challenging {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.path-content {
+  margin-top: 1rem;
+}
+
+.path-description {
+  color: #495057;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.daily-requirement {
+  background: rgba(0, 123, 255, 0.1);
+  border: 1px solid rgba(0, 123, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  color: #004085;
+  font-size: 0.95rem;
+}
+
+.feasibility-warning {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: #856404;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.warning-icon {
+  flex-shrink: 0;
+}
+
+/* Limits Information */
+.limits-info {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.limits-title {
+  color: #495057;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.limit-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.limit-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.limit-content {
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+/* Tips Section */
+.tips-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tips-title {
+  color: #495057;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tips-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e9ecef;
+  color: #495057;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.tips-list li:last-child {
+  border-bottom: none;
+}
+
+.tips-list li::before {
+  content: "💡";
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 768px) {
+  .results-display {
+    padding: 0 0.25rem;
+    margin: 1rem auto;
+  }
+  
+  .congratulations-card {
+    padding: 1.75rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .congrats-icon {
+    font-size: 3.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .congrats-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .congrats-message {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  
+  .congrats-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+  
+  .congrats-stat {
+    padding: 0.75rem;
+  }
+  
+  .stat-value {
+    font-size: 1.2rem;
+  }
+  
+  .stat-value.highlight {
+    font-size: 1.3rem;
+  }
+  
+  .goal-summary {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .results-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .summary-item {
+    padding: 0.875rem;
+  }
+  
+  .summary-label {
+    font-size: 0.8rem;
+  }
+  
+  .summary-value {
+    font-size: 1.1rem;
+  }
+  
+  .summary-value.highlight {
+    font-size: 1.25rem;
+  }
+  
+  .paths-title {
+    font-size: 1.3rem;
+  }
+  
+  .paths-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .path-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .path-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .path-icon {
+    font-size: 1.75rem;
+  }
+  
+  .path-title {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+  
+  .path-description {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  
+  .daily-requirement {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  
+  .limits-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  
+  .limit-item {
+    padding: 0.6rem;
+  }
+  
+  .limit-content {
+    font-size: 0.85rem;
+  }
+  
+  .tips-section {
+    padding: 1rem;
+  }
+  
+  .tips-title {
+    font-size: 1.1rem;
+  }
+  
+  .tips-list li {
+    padding: 0.6rem 0;
+    padding-left: 1.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-display {
+    margin: 0.5rem auto;
+  }
+  
+  .congratulations-card {
+    padding: 1.25rem 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .congrats-icon {
+    font-size: 3rem;
+  }
+  
+  .congrats-title {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .congrats-message {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .congrats-stats {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  
+  .congrats-stat {
+    padding: 0.6rem;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+  }
+  
+  .stat-value {
+    font-size: 1.1rem;
+  }
+  
+  .stat-value.highlight {
+    font-size: 1.2rem;
+  }
+  
+  .next-goal-suggestion {
+    font-size: 0.9rem;
+  }
+  
+  .goal-summary {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .results-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  
+  .summary-item {
+    padding: 0.75rem;
+  }
+  
+  .summary-label {
+    font-size: 0.75rem;
+  }
+  
+  .summary-value {
+    font-size: 1rem;
+  }
+  
+  .summary-value.highlight {
+    font-size: 1.15rem;
+  }
+  
+  .paths-title {
+    font-size: 1.2rem;
+  }
+  
+  .paths-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .path-card {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .path-icon {
+    font-size: 1.5rem;
+  }
+  
+  .path-title {
+    font-size: 1rem;
+  }
+  
+  .feasibility-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+  }
+  
+  .path-description {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .daily-requirement {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .feasibility-warning {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .limits-info {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .limits-title {
+    font-size: 1rem;
+  }
+  
+  .limit-item {
+    padding: 0.5rem;
+  }
+  
+  .limit-icon {
+    font-size: 1.25rem;
+  }
+  
+  .limit-content {
+    font-size: 0.8rem;
+  }
+  
+  .tips-section {
+    padding: 0.75rem;
+  }
+  
+  .tips-title {
+    font-size: 1rem;
+  }
+  
+  .tips-list li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .tips-list li::before {
+    top: 0.5rem;
+  }
+}
+
+/* Touch-friendly enhancements */
+@media (hover: none) and (pointer: coarse) {
+  .path-card:hover {
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .path-card:active {
+    transform: scale(0.99);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .congratulations-card {
+    padding: 1rem;
+  }
+  
+  .congrats-title {
+    font-size: 1.5rem;
+  }
+  
+  .congrats-message {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
+  .congrats-stats {
+    grid-template-columns: repeat(3, 1fr);
+    margin: 1rem 0;
+  }
+  
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

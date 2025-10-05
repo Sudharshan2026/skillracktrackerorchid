@@ -1,0 +1,100 @@
+/* Validation Error Component Styles */
+.validation-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.validation-error-icon {
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.validation-error-message {
+  color: #721c24;
+  font-weight: 500;
+}
+
+/* Compact variant */
+.validation-error.compact {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.validation-error.compact .validation-error-icon {
+  font-size: 0.8rem;
+}
+
+/* Inline variant */
+.validation-error.inline {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 0.125rem;
+}
+
+.validation-error.inline .validation-error-message {
+  color: #dc3545;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .validation-error {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .validation-error-icon {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .validation-error {
+    padding: 0.4rem;
+    font-size: 0.8rem;
+  }
+  
+  .validation-error-icon {
+    font-size: 0.8rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .validation-error {
+    background: #fff;
+    border: 2px solid #dc3545;
+  }
+  
+  .validation-error-message {
+    color: #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .validation-error {
+    animation: none;
+  }
+}
