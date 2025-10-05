@@ -1,7 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import StatsDisplay from '../../src/components/StatsDisplay';
-import type { SkillRackProfile } from '../../src/types';
+import StatsDisplay from '../../components/StatsDisplay';
+import type { SkillRackProfile, ProfileStats } from '../../types';
 
 describe('StatsDisplay Component', () => {
   const mockProfileData: SkillRackProfile = {

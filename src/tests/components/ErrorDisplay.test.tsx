@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ErrorDisplay from '../../src/components/ErrorDisplay';
-import type { ApiErrorResponse } from '../../src/types';
+import ErrorDisplay from '../../components/ErrorDisplay';
+import type { ApiErrorResponse } from '../../types';
 
 // Mock window.open
 const mockWindowOpen = jest.fn();

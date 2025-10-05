@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import handler from '../api/parse-profile';
 import { validProfileHtml } from './sample-data';

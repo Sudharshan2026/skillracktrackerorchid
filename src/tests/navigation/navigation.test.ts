@@ -13,7 +13,7 @@ import {
   getProfileUrlFromState,
   isValidResultsState,
   initializeUrlState
-} from '../../src/utils/navigation';
+} from '../../utils/navigation';
 
 // Mock window.location and window.history
 const mockLocation = {

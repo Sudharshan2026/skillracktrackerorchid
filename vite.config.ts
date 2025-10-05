@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+// @ts-ignore - JavaScript plugin file
 import { componentTaggerPlugin } from "./src/visual-edits/component-tagger-plugin.js";
 
 // Minimal plugin to log build-time and dev-time errors to console

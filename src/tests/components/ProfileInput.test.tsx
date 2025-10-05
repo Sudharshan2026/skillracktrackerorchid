@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ProfileInput from '../../src/components/ProfileInput';
-import type { ProfileInputProps } from '../../src/types';
+import ProfileInput from '../../components/ProfileInput';
+import type { ProfileInputProps } from '../../types';
 
 // Mock the ValidationError component
 jest.mock('../../src/components/ValidationError', () => {

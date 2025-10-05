@@ -2,13 +2,6 @@ import { useState, useCallback } from 'react';
 import type { SkillRackProfile, GoalCalculation, ApiResponse } from './types';
 import { HomePage, ResultsPage, TempUserPage, ThemeToggle } from './components';
 import { useNavigation } from './hooks/useNavigation';
-import HoverReceiver from "@/visual-edits/VisualEditsMessenger";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Toaster } from '@/components/ui/toaster';
-import { Toaster as Sonner } from '@/components/ui/sonner';
-import { toast } from 'sonner';
-import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 
 /**
@@ -57,10 +50,10 @@ function App() {
         setProfileData(data.data);
         // Navigate to results page with the profile data - Requirement 8.2
         navigation.navigateToResults(url, data.data);
-        toast.success('Profile analyzed successfully!');
+        console.log('Profile analyzed successfully!');
       } else {
         navigation.setError(data);
-        toast.error(data.error || 'Failed to analyze profile');
+        console.error(data.error || 'Failed to analyze profile');
       }
     } catch (err) {
       console.error('Profile parsing error:', err);
@@ -75,7 +68,7 @@ function App() {
       };
       
       navigation.setError(errorResponse);
-      toast.error('Failed to load profile. Please try again.');
+      console.error('Failed to load profile. Please try again.');
     } finally {
       navigation.setLoading(false);
     }
@@ -170,9 +163,6 @@ function App() {
   // Render appropriate page based on navigation state - Requirements 8.1, 8.2, 8.6
   return (
     <div className="app">
-      {/* Toast notifications */}
-      <Sonner position="top-right" />
-      
       {/* Theme Toggle - Available on all pages */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />

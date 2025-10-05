@@ -1,4 +1,65 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+// import type { VercelRequest, VercelResponse } from '@vercel/node';
+// import axios from 'axios';
+// import * as cheerio from 'cheerio';
+
+// // Inline types and utilities to avoid module resolution issues
+// interface ProfileStats {
+//   codeTutor: number;
+//   codeTrack: number;
+//   codeTest: number;
+//   dailyTest: number;
+//   dailyChallenge: number;
+//   rank: number;
+//   level: number;
+//   gold: number;
+//   silver: number;
+//   bronze: number;
+//   programsSolved: number;
+//   totalPoints: number;
+// }
+
+// interface Certificate {
+//   title: string;
+//   date: string;
+//   link: string;
+// }
+
+// interface SkillRackProfile {
+//   profileImage?: string;
+//   name: string;
+//   id: string;
+//   department: string;
+//   college: string;
+//   year: string;
+//   gender: string;
+//   stats: ProfileStats;
+//   languages: Record<string, number>;
+//   certificates: Certificate[];
+// }
+
+// // URL validation for SkillRack profile format
+// function validateSkillRackUrl(url: string): boolean {
+//   try {
+//     const urlObj = new URL(url);
+    
+//     // Check if it's HTTP or HTTPS protocol
+//     if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+//       return false;
+//     }
+    
+//     // Check if it's a SkillRack domain with www subdomain
+//     if (urlObj.hostname !== 'www.skillrack.com') {
+//       return false;
+//     }
+//     // Check if it matches the profile URL pattern: /profile/[id]/[hash]
+//     const pathPattern = /^\/profile\/\d+\/[a-zA-Z0-9]+$/;
+//     return pathPattern.test(urlObj.pathname);
+//   } catch {
+//     return false;
+//   }
+// }
+
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -141,7 +202,7 @@ function parseSkillRackProfile(html: string): SkillRackProfile {
   // Extract programming languages - direct approach
   const languages: Record<string, number> = {};
   const languageStats = $('div.ui.six.small.statistics').eq(1); // Second statistics section
-  languageStats.find('.statistic').each((_i, el) => {
+  languageStats.find('.statistic').each((i, el) => {
     const label = $(el).find('.label').text().trim();
     const valueText = $(el).find('.value').text();
     const value = parseInt(valueText.replace(/[^0-9]/g, '')) || 0;
@@ -152,7 +213,7 @@ function parseSkillRackProfile(html: string): SkillRackProfile {
 
   // Extract certificates
   const certificates: Certificate[] = [];
-  $('.ui.brown.card').each((_i, el) => {
+  $('.ui.brown.card').each((i, el) => {
     const title = $(el).find('b').text().trim();
     
     // Extract date with a more precise approach

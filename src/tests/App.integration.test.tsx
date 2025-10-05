@@ -4,7 +4,7 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import App from '../src/App';
+import App from '../App';
 
 // Mock the navigation hook
 jest.mock('../src/hooks/useNavigation', () => ({
@@ -24,14 +24,14 @@ jest.mock('../src/hooks/useNavigation', () => ({
 
 // Mock the components to avoid complex rendering
 jest.mock('../src/components', () => ({
-  HomePage: ({ onAnalyze, loading, error, onClearError, onNetworkStatusChange }: any) => (
+  HomePage: ({ loading, error }: any) => (
     <div data-testid="home-page">
       <h1>Home Page</h1>
       <p>Loading: {loading ? 'true' : 'false'}</p>
       <p>Error: {error ? 'has error' : 'no error'}</p>
     </div>
   ),
-  ResultsPage: ({ profileData, analyzedUrl, goalResults, onCalculateGoal, onGoHome }: any) => (
+  ResultsPage: ({ analyzedUrl }: any) => (
     <div data-testid="results-page">
       <h1>Results Page</h1>
       <p>Profile URL: {analyzedUrl}</p>

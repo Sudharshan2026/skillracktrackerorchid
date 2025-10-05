@@ -12,7 +12,7 @@ jest.mock('../../api/parsing-utils', () => ({
   parseProfileStats: jest.fn()
 }));
 
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import handler from '../../api/parse-profile';
 import { validateSkillRackUrl, parseProfileStats } from '../../api/parsing-utils';
 

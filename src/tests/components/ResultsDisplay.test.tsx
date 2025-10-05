@@ -1,7 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ResultsDisplay from '../../src/components/ResultsDisplay';
-import type { GoalCalculation, AchievementPath } from '../../src/types';
+import ResultsDisplay from '../../components/ResultsDisplay';
+import type { GoalCalculation, AchievementPath } from '../../types';
 
 describe('ResultsDisplay Component', () => {
   const mockAchievementPaths: AchievementPath[] = [

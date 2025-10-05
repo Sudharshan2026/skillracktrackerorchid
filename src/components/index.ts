@@ -1,7 +1,7 @@
 // Export all components for easier importing
 export { default as ProfileInput } from './ProfileInput';
 export { default as StatsDisplay } from './StatsDisplay';
-export { default as StatsDisplaySkeleton } from './StatsDisplaySkeleton';
+export { StatsDisplaySkeleton } from './StatsDisplaySkeleton';
 export { default as GoalCalculator } from './GoalCalculator';
 export { default as ResultsDisplay } from './ResultsDisplay';
 export { default as ErrorDisplay } from './ErrorDisplay';

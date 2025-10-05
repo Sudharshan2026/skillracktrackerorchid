@@ -4,7 +4,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
-import { useNavigation } from '../../src/hooks/useNavigation';
+import { useNavigation } from '../../hooks/useNavigation';
 
 // Mock the navigation utilities
 jest.mock('../../src/utils/navigation', () => ({

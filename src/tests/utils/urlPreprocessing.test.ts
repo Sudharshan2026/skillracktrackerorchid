@@ -2,7 +2,7 @@
  * URL preprocessing utilities tests
  */
 
-import { preprocessUrl, validateSkillRackUrl, getPreprocessingFeedback } from '../../src/utils/urlPreprocessing';
+import { preprocessUrl, validateSkillRackUrl, getPreprocessingFeedback } from '../../utils/urlPreprocessing';
 
 describe('URL Preprocessing', () => {
   describe('preprocessUrl', () => {

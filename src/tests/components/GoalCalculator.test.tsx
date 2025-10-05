@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GoalCalculator from '../../src/components/GoalCalculator';
-import type { GoalCalculatorProps } from '../../src/types';
+import GoalCalculator from '../../components/GoalCalculator';
+import type { GoalCalculatorProps } from '../../types';
 
 // Mock the ValidationError component
 jest.mock('../../src/components/ValidationError', () => {
