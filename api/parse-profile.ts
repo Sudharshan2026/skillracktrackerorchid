@@ -1,64 +1,3 @@
-// import type { VercelRequest, VercelResponse } from '@vercel/node';
-// import axios from 'axios';
-// import * as cheerio from 'cheerio';
-
-// // Inline types and utilities to avoid module resolution issues
-// interface ProfileStats {
-//   codeTutor: number;
-//   codeTrack: number;
-//   codeTest: number;
-//   dailyTest: number;
-//   dailyChallenge: number;
-//   rank: number;
-//   level: number;
-//   gold: number;
-//   silver: number;
-//   bronze: number;
-//   programsSolved: number;
-//   totalPoints: number;
-// }
-
-// interface Certificate {
-//   title: string;
-//   date: string;
-//   link: string;
-// }
-
-// interface SkillRackProfile {
-//   profileImage?: string;
-//   name: string;
-//   id: string;
-//   department: string;
-//   college: string;
-//   year: string;
-//   gender: string;
-//   stats: ProfileStats;
-//   languages: Record<string, number>;
-//   certificates: Certificate[];
-// }
-
-// // URL validation for SkillRack profile format
-// function validateSkillRackUrl(url: string): boolean {
-//   try {
-//     const urlObj = new URL(url);
-    
-//     // Check if it's HTTP or HTTPS protocol
-//     if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
-//       return false;
-//     }
-    
-//     // Check if it's a SkillRack domain with www subdomain
-//     if (urlObj.hostname !== 'www.skillrack.com') {
-//       return false;
-//     }
-//     // Check if it matches the profile URL pattern: /profile/[id]/[hash]
-//     const pathPattern = /^\/profile\/\d+\/[a-zA-Z0-9]+$/;
-//     return pathPattern.test(urlObj.pathname);
-//   } catch {
-//     return false;
-//   }
-// }
-
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -329,7 +268,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
   
   // Basic rate limiting
-  const clientIp = req.headers['x-forwarded-for'] as string || req.connection?.remoteAddress || 'unknown';
+  const clientIp = (
+    req.headers['x-forwarded-for'] as string ||
+    req.headers['x-real-ip'] as string ||
+    req.socket?.remoteAddress ||
+    'unknown'
+  );
   if (!checkRateLimit(clientIp)) {
     const response: ApiResponse = {
       success: false,
@@ -342,6 +286,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   
   try {
     const { url } = req.body;
+    
+    // Debug logging for Vercel
+    console.log('Received request for URL:', url);
     
     // Validate URL format
     if (!url || typeof url !== 'string') {
@@ -356,6 +303,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     
     // Preprocess the URL to clean whitespace and normalize format
     const cleanedUrl = preprocessApiUrl(url);
+    console.log('Cleaned URL:', cleanedUrl);
     
     // Validate SkillRack URL format using the cleaned URL
     if (!validateSkillRackUrl(cleanedUrl)) {
@@ -369,6 +317,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     }
     
     // Fetch the profile page with proper User-Agent headers using the cleaned URL
+    console.log('Fetching profile from:', cleanedUrl);
     const axiosResponse = await axios.get(cleanedUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -381,6 +330,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       timeout: 10000 // 10 second timeout
     });
     
+    console.log('Profile fetched successfully, parsing...');
     // Parse the HTML and extract complete profile data
     const profileData = parseSkillRackProfile(axiosResponse.data);
     
@@ -389,10 +339,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       data: profileData
     };
     
+    console.log('Profile parsed successfully');
     res.status(200).json(response);
     
   } catch (error: any) {
     console.error('Error parsing profile:', error);
+    console.error('Error stack:', error.stack);
     
     let errorResponse: ApiResponse;
     

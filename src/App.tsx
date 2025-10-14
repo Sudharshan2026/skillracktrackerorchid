@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { SkillRackProfile, GoalCalculation, ApiResponse } from './types';
-import { HomePage, ResultsPage, TempUserPage, ThemeToggle } from './components';
+import { HomePage, ResultsPage, TempUserPage} from './components';
 import { useNavigation } from './hooks/useNavigation';
 import './App.css';
 
@@ -163,10 +163,10 @@ function App() {
   // Render appropriate page based on navigation state - Requirements 8.1, 8.2, 8.6
   return (
     <div className="app">
-      {/* Theme Toggle - Available on all pages */}
+      {/* Theme Toggle - Available on all pages 
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
-      </div>
+      </div>*/}
 
       {navigation.currentPage === 'home' && (
         <HomePage

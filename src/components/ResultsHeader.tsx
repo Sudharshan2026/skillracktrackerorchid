@@ -1,5 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button';
-import ThemeToggle from './ThemeToggle';
+// import ThemeToggle from './ThemeToggle';
 
 export interface ResultsHeaderProps {
   analyzedUrl: string;
@@ -45,7 +45,7 @@ export function ResultsHeader({ onGoHome, showPlan = false, onLogout }: ResultsH
 
         {/* Right: Logout */}
         <div className="flex items-center justify-end gap-3 shrink-0">
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           <button
             className={buttonVariants({ variant: 'ghost', size: 'sm' }) + ' btn-white'}
             onClick={onLogout ?? onGoHome}

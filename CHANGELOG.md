@@ -137,6 +137,12 @@ All notable changes to the SkillRack Tracker project will be documented in this 
 - Better performance with optimized transitions
 - Improved developer experience with consistent patterns
 
+### Changed - SkillRack Scraping Logic Migration (2025-10-05)
+- Deprecated Vercel API scraping: The scraping logic in `api/parse-profile.ts` is now disabled and returns a deprecation message.
+- Client-side scraping migration: SkillRack profile scraping is now performed in the browser using a CORS proxy (see `plan.md`).
+- Frontend will fetch profile HTML via a proxy (e.g., `https://api.allorigins.win/raw?url=...`) and parse it using browser APIs.
+- This change bypasses Cloudflare blocks and improves reliability for deployed users.
+
 ---
 
 ## [Previous Versions]
