@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -245,10 +245,13 @@ function checkRateLimit(clientIp: string): boolean {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  try {
+    console.log('API handler called - Method:', req.method, 'URL:', req.url);
+    
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
@@ -285,6 +288,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
   
   try {
+    console.log('Request body:', JSON.stringify(req.body));
     const { url } = req.body;
     
     // Debug logging for Vercel
@@ -379,6 +383,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
         code: 'PARSE_ERROR'
       };
     }
+    
+    res.status(500).json(errorResponse);
+  }
+  } catch (globalError: any) {
+    console.error('Global API error:', globalError);
+    console.error('Global error stack:', globalError.stack);
+    
+    const errorResponse = {
+      success: false,
+      error: 'Internal server error. Please try again later.',
+      code: 'PARSE_ERROR'
+    };
     
     res.status(500).json(errorResponse);
   }
