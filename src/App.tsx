@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import axios from 'axios';
 import type { SkillRackProfile, GoalCalculation, ApiResponse } from './types';
 import { HomePage, ResultsPage, TempUserPage} from './components';
 import { useNavigation } from './hooks/useNavigation';
@@ -32,19 +33,13 @@ function App() {
     setGoalResults(null); // Clear previous goal calculations
 
     try {
-      const response = await fetch('/api/parse-profile', {
-        method: 'POST',
+      const response = await axios.post('/api/parse-profile', { url }, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data: ApiResponse = await response.json();
+      const data: ApiResponse = response.data;
 
       if (data.success) {
         setProfileData(data.data);
@@ -55,17 +50,36 @@ function App() {
         navigation.setError(data);
         console.error(data.error || 'Failed to analyze profile');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Profile parsing error:', err);
       
-      // Create structured error response for better error handling
-      const errorResponse: ApiResponse = {
-        success: false,
-        error: err instanceof Error 
-          ? `Network error: ${err.message}` 
-          : 'Failed to fetch profile data. Please check your connection and try again.',
-        code: 'NETWORK_ERROR'
-      };
+      // Handle axios errors specifically
+      let errorResponse: ApiResponse;
+      
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        const data = err.response.data;
+        errorResponse = {
+          success: false,
+          error: data.error || `Server error: ${err.response.status}`,
+          code: data.code || 'PARSE_ERROR'
+        };
+      } else if (err.request) {
+        // The request was made but no response was received
+        errorResponse = {
+          success: false,
+          error: 'No response received from server. Please check your connection.',
+          code: 'NETWORK_ERROR'
+        };
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        errorResponse = {
+          success: false,
+          error: err.message || 'Failed to send request. Please try again.',
+          code: 'NETWORK_ERROR'
+        };
+      }
       
       navigation.setError(errorResponse);
       console.error('Failed to load profile. Please try again.');
