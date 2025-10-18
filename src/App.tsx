@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
-import axios from 'axios';
 import type { SkillRackProfile, GoalCalculation, ApiResponse } from './types';
-import { HomePage, ResultsPage, TempUserPage} from './components';
+import { HomePage, ResultsPage, TempUserPage } from './components';
 import { useNavigation } from './hooks/useNavigation';
 import './App.css';
 
@@ -33,56 +32,40 @@ function App() {
     setGoalResults(null); // Clear previous goal calculations
 
     try {
-      const response = await axios.post('/api/parse-profile', { url }, {
+      const response = await fetch('/api/parse-profile', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ url }),
       });
 
-      const data: ApiResponse = response.data;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: ApiResponse = await response.json();
 
       if (data.success) {
         setProfileData(data.data);
         // Navigate to results page with the profile data - Requirement 8.2
         navigation.navigateToResults(url, data.data);
-        console.log('Profile analyzed successfully!');
       } else {
         navigation.setError(data);
-        console.error(data.error || 'Failed to analyze profile');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Profile parsing error:', err);
       
-      // Handle axios errors specifically
-      let errorResponse: ApiResponse;
-      
-      if (err.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        const data = err.response.data;
-        errorResponse = {
-          success: false,
-          error: data.error || `Server error: ${err.response.status}`,
-          code: data.code || 'PARSE_ERROR'
-        };
-      } else if (err.request) {
-        // The request was made but no response was received
-        errorResponse = {
-          success: false,
-          error: 'No response received from server. Please check your connection.',
-          code: 'NETWORK_ERROR'
-        };
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        errorResponse = {
-          success: false,
-          error: err.message || 'Failed to send request. Please try again.',
-          code: 'NETWORK_ERROR'
-        };
-      }
+      // Create structured error response for better error handling
+      const errorResponse: ApiResponse = {
+        success: false,
+        error: err instanceof Error 
+          ? `Network error: ${err.message}` 
+          : 'Failed to fetch profile data. Please check your connection and try again.',
+        code: 'NETWORK_ERROR'
+      };
       
       navigation.setError(errorResponse);
-      console.error('Failed to load profile. Please try again.');
     } finally {
       navigation.setLoading(false);
     }
@@ -177,10 +160,7 @@ function App() {
   // Render appropriate page based on navigation state - Requirements 8.1, 8.2, 8.6
   return (
     <div className="app">
-      {/* Theme Toggle - Available on all pages 
-      <div className="fixed top-4 right-4 z-50">
-        <ThemeToggle />
-      </div>*/}
+      {/* Theme Toggle - Available on all pages */}
 
       {navigation.currentPage === 'home' && (
         <HomePage
