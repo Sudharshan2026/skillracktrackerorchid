@@ -54,22 +54,6 @@ export function HomePage({
 
       <main className="home-main">
         {/* Instructions Section - Progressive Disclosure */}
-        <details className="instructions-section" open>
-          <summary className="instructions-summary">How to find your SkillRack profile link</summary>
-          <div className="instructions-content">
-            <ol className="instructions-list">
-              <li>Login to your SkillRack account</li>
-              <li>Navigate to your Profile page</li>
-              <li>Enter your password when prompted</li>
-              <li>Click the 'View' button to access your profile</li>
-              <li>Copy the URL from your browser's address bar</li>
-              <li>Paste the URL in the field below</li>
-            </ol>
-            <p className="instructions-note">
-              <strong>Note:</strong> Make sure you're on your actual profile page, not just the login page.
-            </p>
-          </div>
-        </details>
 
         {/* Profile Input Section - Requirements 4.1, 4.7, 8.1 */}
         <section id="analyze" className="profile-input-section">
@@ -94,7 +78,22 @@ export function HomePage({
             />
           )}
         </section>
-
+                <details className="instructions-section" open>
+          <summary className="instructions-summary">How to find your SkillRack profile link</summary>
+          <div className="instructions-content">
+            <ol className="instructions-list">
+              <li>Login to your SkillRack account</li>
+              <li>Navigate to your Profile page</li>
+              <li>Enter your password when prompted</li>
+              <li>Click the 'View' button to access your profile</li>
+              <li>Copy the URL from your browser's address bar</li>
+              <li>Paste the URL in the field below</li>
+            </ol>
+            <p className="instructions-note">
+              <strong>Note:</strong> Make sure you're on your actual profile page, not just the login page.
+            </p>
+          </div>
+        </details>
         {/* Features Section */}
         <section className="features-section">
           <h2>What You'll Get</h2>
