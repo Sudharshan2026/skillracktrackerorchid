@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import fetch from 'node-fetch';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 // Inline types and utilities to avoid module resolution issues
@@ -248,6 +248,18 @@ interface ApiResponse {
   code?: 'INVALID_URL' | 'NETWORK_ERROR' | 'PARSE_ERROR' | 'NOT_FOUND';
 }
 
+// Function to get random user agent to avoid detection
+function getRandomUserAgent(): string {
+  const userAgents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15'
+  ];
+  return userAgents[Math.floor(Math.random() * userAgents.length)];
+}
 
 // Rate limiting function
 function checkRateLimit(clientIp: string): boolean {
@@ -333,185 +345,73 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     const cleanedUrl = preprocessApiUrl(url);
     console.log('Processed URL:', cleanedUrl);
     
-  // Fetch the profile page with ScraperAPI to bypass Cloudflare protection
-    let htmlContent: string = '';
-  let jsonContent: any = null;
+    // Fetch the profile page with retry logic and enhanced headers
+    let axiosResponse: any = null;
     let attempt = 0;
-    const maxAttempts = 2; // Reduced from 3 to 2 for faster processing
+    const maxAttempts = 3;
     
-    // ScraperAPI configuration
-    // Default API key works but has limited credits. For production, get your own key from https://www.scraperapi.com/signup
-    // Set SCRAPERAPI_KEY environment variable in Vercel dashboard for your own key
-    const scraperApiKey = process.env.SCRAPERAPI_KEY || '9df7b00be01b37367cf4de2f69e546c8';
-    
-    // Dynamic timeouts: ScraperAPI responds in 4-12s without extra parameters
-    // Vercel Pro allows 60s max, Hobby allows 10s max
-    // Using 20s/25s to give enough buffer for network variations
-    const getTimeout = (attempt: number) => attempt === 1 ? 20000 : 25000;
-    
-    while (attempt < maxAttempts && !htmlContent) {
+    while (attempt < maxAttempts) {
       attempt++;
       
       try {
-        // Track timing for this attempt
-        const attemptStartTime = Date.now();
-        
-        // Add minimal delay between attempts
+        // Add delay between attempts (except first)
         if (attempt > 1) {
-          const delay = 1000; // 1s delay (ScraperAPI doesn't need reset time)
-          console.log(`Waiting ${delay}ms before retry...`);
+          const delay = Math.random() * 2000 + 1000 * attempt; // 1-3s, 2-4s, 3-5s
           await new Promise(resolve => setTimeout(resolve, delay));
         }
 
-        console.log(`Attempt ${attempt}: Fetching via ScraperAPI...`);
-        
-        // Try ScraperAPI first with optimized parameters
-        try {
-          // Optimized ScraperAPI parameters for better reliability and speed
-          // Using minimal parameters - render=false and country_code cause 500 errors on protected domains
-          const scraperApiUrl = `https://api.scraperapi.com/?api_key=${scraperApiKey}&url=${encodeURIComponent(cleanedUrl)}`;
+        // Create axios instance with session-like behavior
+        const axiosInstance = axios.create({
+          timeout: 20000,
+          maxRedirects: 5,
+          validateStatus: function (status) {
+            return status < 500;
+          },
+          // Add some session-like headers
+          withCredentials: false,
+        });
 
-          console.log(`Attempt ${attempt}: ScraperAPI URL (key masked): https://api.scraperapi.com/?api_key=***&url=${encodeURIComponent(cleanedUrl)}`);
-          console.log(`Attempt ${attempt}: API Key present: ${!!scraperApiKey}, Length: ${scraperApiKey?.length || 0}`);
-
-          // Dynamic timeout: 12s first attempt, 18s second attempt  
-          const timeout = getTimeout(attempt);
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), timeout);
-          console.log(`Using ${timeout}ms timeout for attempt ${attempt}`);
-          
-          const attemptStartTime = Date.now();
-
-          const scraperResponse = await fetch(scraperApiUrl, {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json,text/html;q=0.9,*/*;q=0.8',
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            },
-            signal: controller.signal
-          });
-
-          clearTimeout(timeoutId);
-          const attemptDuration = Date.now() - attemptStartTime;
-
-          if (scraperResponse.ok) {
-            console.log(`Attempt ${attempt}: ScraperAPI response received in ${attemptDuration}ms`);
-            const contentType = scraperResponse.headers.get('content-type') || '';
-
-            // If ScraperAPI returned JSON (autoparse), parse and try to use structured data
-            if (contentType.includes('application/json')) {
-              try {
-                jsonContent = await scraperResponse.json();
-                console.log(`Attempt ${attempt}: ScraperAPI returned JSON autoparse`);
-
-                // autoparse sometimes puts the extracted HTML in `body` or `html` fields
-                if (!jsonContent || (typeof jsonContent === 'object' && Object.keys(jsonContent).length === 0)) {
-                  console.log(`Attempt ${attempt}: ScraperAPI JSON empty, falling back to HTML`);
-                } else {
-                  // If autoparse produced a `body` or `html` snippet, prefer it for parsing
-                  if (typeof jsonContent.body === 'string' && jsonContent.body.length > 0) {
-                    htmlContent = jsonContent.body;
-                  } else if (typeof jsonContent.html === 'string' && jsonContent.html.length > 0) {
-                    htmlContent = jsonContent.html;
-                  }
-
-                  // If we have usable content, break
-                  if (htmlContent && (htmlContent.includes('ui.big.label.black') || htmlContent.includes('statistic') || htmlContent.length > 500)) {
-                    break; // success
-                  }
-                }
-              } catch (jsonErr) {
-                console.log(`Attempt ${attempt}: Error parsing ScraperAPI JSON:`, (jsonErr as Error).message);
-              }
-            } else {
-              // Not JSON - fall back to reading HTML text
-              htmlContent = await scraperResponse.text();
-              console.log(`Attempt ${attempt}: ScraperAPI succeeded (HTML), length: ${htmlContent.length}`);
-              
-              // Quick validation - check for SkillRack profile indicators
-              const hasProfileContent = htmlContent.includes('ui.big.label.black') || 
-                                      htmlContent.includes('statistic') || 
-                                      htmlContent.includes('PROGRAMS SOLVED') ||
-                                      htmlContent.includes('RANK');
-              
-              if (hasProfileContent && htmlContent.length > 1000) {
-                break; // Success - we have valid profile content
-              } else {
-                console.log(`Attempt ${attempt}: ScraperAPI returned invalid HTML content, trying direct fetch`);
-                throw new Error('Invalid content from ScraperAPI');
-              }
-            }
-          } else {
-            const errorText = await scraperResponse.text().catch(() => 'Unable to read error response');
-            console.log(`Attempt ${attempt}: ScraperAPI failed with status ${scraperResponse.status}`);
-            console.log(`Attempt ${attempt}: ScraperAPI error response: ${errorText.substring(0, 200)}`);
-            throw new Error(`ScraperAPI failed: ${scraperResponse.status} - ${errorText.substring(0, 100)}`);
+        axiosResponse = await axiosInstance.get(cleanedUrl, {
+          headers: {
+            'User-Agent': getRandomUserAgent(),
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': attempt === 1 ? 'cross-site' : 'same-origin',
+            'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'Sec-Ch-Ua-Platform': '"Windows"',
+            'Cache-Control': attempt > 1 ? 'no-cache' : 'max-age=0',
+            'Referer': attempt === 1 ? 'https://www.google.com/' : 'https://www.skillrack.com/',
+            'DNT': '1',
+            // Vary headers slightly between attempts
+            ...(attempt > 1 && { 'Pragma': 'no-cache' }),
+            ...(attempt === 2 && { 'X-Requested-With': 'XMLHttpRequest' }),
           }
-        } catch (scraperError) {
-          const attemptDuration = Date.now() - attemptStartTime;
-          console.log(`Attempt ${attempt}: ScraperAPI error after ${attemptDuration}ms:`, (scraperError as Error).message);
-          console.log(`Attempt ${attempt}: Error type:`, (scraperError as any).type || 'unknown');
+        });
 
-          // Skip direct fetch on final attempt since it consistently gets 403 Forbidden in production
-          if (attempt === maxAttempts) {
-            console.log(`Attempt ${attempt}: Skipping direct fetch on final attempt (403 Forbidden expected)`);
-            throw scraperError;
-          }
-
-          // Fallback to direct fetch if ScraperAPI fails
-          console.log(`Attempt ${attempt}: Trying direct fetch as fallback...`);
+        // Check if we got blocked immediately after request
+        if (axiosResponse.status === 403 || 
+            axiosResponse.data.includes('cf-wrapper') || 
+            axiosResponse.data.includes('Cloudflare') ||
+            axiosResponse.data.includes('Sorry, you have been blocked') ||
+            axiosResponse.data.includes('Access denied') ||
+            axiosResponse.data.includes('Ray ID')) {
           
-          // Create AbortController for timeout
-          const directController = new AbortController();
-          const directTimeoutId = setTimeout(() => directController.abort(), 8000);
-          
-          const directResponse = await fetch(cleanedUrl, {
-            method: 'GET',
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-              'Accept-Language': 'en-US,en;q=0.9',
-              'Accept-Encoding': 'gzip, deflate, br',
-              'Connection': 'keep-alive',
-              'Upgrade-Insecure-Requests': '1',
-              'Sec-Fetch-Dest': 'document',
-              'Sec-Fetch-Mode': 'navigate',
-              'Sec-Fetch-Site': 'cross-site',
-              'Cache-Control': 'max-age=0',
-              'DNT': '1',
-            },
-            signal: directController.signal
-          });
-          
-          clearTimeout(directTimeoutId);
-
-          if (!directResponse.ok) {
-            throw new Error(`Direct fetch failed: ${directResponse.status} ${directResponse.statusText}`);
-          }
-
-          htmlContent = await directResponse.text();
-          console.log(`Attempt ${attempt}: Direct fetch succeeded, HTML length: ${htmlContent.length}`);
-        }
-
-        // Check if we got blocked content
-        if (htmlContent.includes('cf-wrapper') || 
-            htmlContent.includes('Cloudflare') ||
-            htmlContent.includes('Sorry, you have been blocked') ||
-            htmlContent.includes('Access denied') ||
-            htmlContent.includes('Ray ID')) {
-          
-          console.log(`Attempt ${attempt}: Cloudflare block detected in response`);
+          console.log(`Attempt ${attempt}: Cloudflare block detected`);
           
           if (attempt === maxAttempts) {
             throw new Error('Cloudflare protection detected - all retry attempts failed');
           }
-          htmlContent = ''; // Reset for next attempt
           continue; // Try again
         }
 
-  // If we get here, the request was successful (or will continue retrying)
-  console.log(`Attempt ${attempt}: Fetch attempt completed`);
-  if (htmlContent) break;
+        // If we get here, the request was successful
+        break;
         
       } catch (error: any) {
         console.log(`Attempt ${attempt} failed:`, error.message);
@@ -522,13 +422,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       }
     }
     
-    // Ensure we have valid HTML content
-    if (!htmlContent) {
-      throw new Error('Failed to get valid HTML content after all retry attempts');
+    // Ensure we have a valid response
+    if (!axiosResponse) {
+      throw new Error('Failed to get valid response after all retry attempts');
     }
     
     // Parse the HTML and extract complete profile data
-    const profileData = parseSkillRackProfile(htmlContent);
+    const profileData = parseSkillRackProfile(axiosResponse.data);
     
     const response: ApiResponse = {
       success: true,
@@ -542,28 +442,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     
     let errorResponse: ApiResponse;
     
-    if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED' || error.message?.includes('fetch')) {
+    if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
       errorResponse = {
         success: false,
         error: 'Unable to connect to SkillRack. Please check your internet connection.',
         code: 'NETWORK_ERROR'
       };
-    } else if (error.message?.includes('404') || error.message?.includes('not found')) {
+    } else if (error.response?.status === 404) {
       errorResponse = {
         success: false,
         error: 'Profile not found. Please check if the URL is correct and the profile is public.',
         code: 'NOT_FOUND'
       };
-    } else if (error.message?.includes('403') || error.message?.includes('blocked') || error.message?.includes('Cloudflare')) {
+    } else if (error.response?.status === 403 || error.message?.includes('Cloudflare')) {
       errorResponse = {
         success: false,
-        error: 'Access temporarily blocked by security protection. Please try again later or contact support if this persists.',
+        error: 'Access temporarily blocked by security protection. This is likely due to Cloudflare protection on SkillRack. Please try again later or contact support if this persists.',
         code: 'NETWORK_ERROR'
       };
-    } else if (error.message?.includes('timeout') || error.message?.includes('aborted') || error.type === 'aborted') {
+    } else if (error.code === 'ECONNABORTED') {
       errorResponse = {
         success: false,
-        error: 'Request timeout - SkillRack is taking too long to respond. Please try again in a few moments.',
+        error: 'Request timeout. Please try again.',
         code: 'NETWORK_ERROR'
       };
     } else {
