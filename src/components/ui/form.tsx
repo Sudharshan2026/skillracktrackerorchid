@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 "use client"
 
 import * as React from "react"

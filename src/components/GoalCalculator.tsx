@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 import React, { useState } from 'react';
 import type { GoalCalculatorProps } from '../types';
 import ValidationError from './ValidationError';

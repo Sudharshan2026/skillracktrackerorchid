@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 import { useState, useEffect, useCallback } from 'react';
 import type { NavigationState, NavigationActions, SkillRackProfile } from '../types';
 import { 

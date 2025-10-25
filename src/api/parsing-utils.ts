@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 export interface ProfileStats {
   codeTutor: number;
   codeTrack: number;

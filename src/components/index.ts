@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 // Export all components for easier importing
 export { default as ProfileInput } from './ProfileInput';
 export { default as StatsDisplay } from './StatsDisplay';

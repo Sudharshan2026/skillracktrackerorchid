@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 import { StatsDisplay, GoalCalculator, ResultsDisplay } from './index';
 import type { SkillRackProfile, GoalCalculation } from '../types';
 import './ResultsPage.css';

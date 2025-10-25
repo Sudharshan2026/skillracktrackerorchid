@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 // SkillRack profile scraper for client-side use
 // Usage: Pass HTML string from CORS proxy fetch to parseSkillRackProfile(html)
 

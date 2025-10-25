@@ -1,4 +1,9 @@
 /**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
+/**
  * Navigation hook integration test
  * Tests the useNavigation hook functionality
  */

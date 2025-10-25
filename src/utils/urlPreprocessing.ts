@@ -1,4 +1,9 @@
 /**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
+/**
  * URL preprocessing utilities for SkillRack profile URLs
  * Implements requirement 4.7: URL preprocessing and validation enhancements
  */

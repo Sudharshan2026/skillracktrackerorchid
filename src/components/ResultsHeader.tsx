@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 import { Button, buttonVariants } from '@/components/ui/button';
 // import ThemeToggle from './ThemeToggle';
 

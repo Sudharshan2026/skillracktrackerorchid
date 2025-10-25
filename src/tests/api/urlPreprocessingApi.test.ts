@@ -1,4 +1,9 @@
 /**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
+/**
  * Tests for URL preprocessing in the API endpoint
  * Requirement 4.7: URL preprocessing and validation enhancements
  */

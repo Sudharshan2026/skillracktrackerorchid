@@ -1,4 +1,9 @@
 /**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
+/**
  * Interface representing SkillRack profile statistics
  * Based on requirements 6.1-6.6 for accurate point calculations
  */

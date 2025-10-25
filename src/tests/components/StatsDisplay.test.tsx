@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2025 Sudharshan2026
+ * Licensed under the MIT License
+ */
+
 import { render, screen } from '@testing-library/react';
 import StatsDisplay from '../../components/StatsDisplay';
 import type { SkillRackProfile, ProfileStats } from '../../types';
