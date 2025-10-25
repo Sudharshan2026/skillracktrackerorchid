@@ -14,6 +14,7 @@ export { default as ValidationError } from './ValidationError';
 export { default as NetworkStatus } from './NetworkStatus';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as ThemeToggle } from './ThemeToggle';
+export { ReportForm } from './ReportForm';
 
 // Page components
 export { HomePage } from './HomePage';

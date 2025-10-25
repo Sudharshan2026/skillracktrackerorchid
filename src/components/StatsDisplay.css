@@ -5,13 +5,21 @@
   padding: 0;
 }
 
+.stats-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+}
+
 .stats-title {
   text-align: center;
   color: var(--text-secondary);
-  margin-bottom: var(--space-xl);
+  margin: 0;
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
   transition: color var(--transition);
+  flex: 1;
 }
 
 /* Main Layout Grid - Student info takes full width at top on mobile, side-by-side on desktop */
@@ -498,9 +506,13 @@
     gap: 1.5rem;
   }
   
+  .stats-header-row {
+    margin-bottom: 1.5rem;
+  }
+  
   .stats-title {
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    text-align: left;
   }
   
   .profile-info {

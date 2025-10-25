@@ -190,6 +190,10 @@
   margin-top: auto;
 }
 
+.report-section {
+  margin-top: var(--space-md);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .home-hero {

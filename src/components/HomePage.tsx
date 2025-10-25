@@ -3,7 +3,7 @@
  * Licensed under the MIT License
  */
 
-import { ProfileInput, ErrorDisplay, NetworkStatus } from './index';
+import { ProfileInput, ErrorDisplay, NetworkStatus, ReportForm } from './index';
 import { StatsDisplaySkeleton } from './StatsDisplaySkeleton';
 import type { ApiResponse } from '../types';
 import './HomePage.css';
@@ -123,6 +123,9 @@ export function HomePage({
         <p>
           SkillRack Tracker - No data is stored or shared. Your privacy is protected.
         </p>
+        <div className="report-section">
+          <ReportForm variant="link" triggerLabel="Report a Problem" />
+        </div>
       </footer>
     </div>
   );

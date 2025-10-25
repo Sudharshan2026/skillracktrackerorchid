@@ -5,6 +5,7 @@
 
 import React from 'react';
 import type { StatsDisplayProps } from '../types';
+import { ReportForm } from './index';
 import './StatsDisplay.css';
 
 const StatsDisplay: React.FC<StatsDisplayProps> = ({ profileData }) => {
@@ -31,7 +32,10 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ profileData }) => {
 
   return (
     <div className="stats-display">
-      <h2 className="stats-title">Your SkillRack Statistics</h2>
+      <div className="stats-header-row">
+        <h2 className="stats-title">Your SkillRack Statistics</h2>
+        <ReportForm variant="icon" />
+      </div>
       
       <div className="main-content-grid">
         {/* Profile Information Section - Left column on desktop */}
