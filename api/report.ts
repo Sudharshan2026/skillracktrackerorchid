@@ -23,7 +23,7 @@ const EMAIL_CONFIG = {
 };
 
 
-// Create transporter using environment variables
+// Create transporter using hardcoded credentials
 function createTransporter() {
   return nodemailer.createTransport({
     service: 'gmail',
@@ -31,8 +31,8 @@ function createTransporter() {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: EMAIL_CONFIG.user,
+      pass: EMAIL_CONFIG.pass,
     },
     tls: {
       rejectUnauthorized: false
@@ -96,17 +96,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
 
   try {
-    // Validate environment variables
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.error('Missing email configuration');
-      const response: ApiResponse = {
-        success: false,
-        error: 'Email service not configured'
-      };
-      res.status(500).json(response);
-      return;
-    }
-
     // Validate request data
     const validation = validateReportData(req.body);
     if (!validation.isValid) {
@@ -125,8 +114,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
     // Email content
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+      from: EMAIL_CONFIG.user,
+      to: EMAIL_CONFIG.adminEmail,
       subject: `[SkillRack Tracker] Report from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -172,10 +161,10 @@ You can reply directly to this email to respond to ${name}.
     // Send email
     await transporter.sendMail(mailOptions);
 
-    // Send confirmation email to user (optional)
-    if (process.env.SEND_CONFIRMATION === 'true') {
+    // Send confirmation email to user
+    if (EMAIL_CONFIG.sendConfirmation) {
       const confirmationOptions = {
-        from: process.env.EMAIL_USER,
+        from: EMAIL_CONFIG.user,
         to: email,
         subject: 'Report Received - SkillRack Tracker',
         html: `
