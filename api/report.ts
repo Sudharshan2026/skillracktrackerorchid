@@ -17,19 +17,26 @@ interface ApiResponse {
 const EMAIL_CONFIG = {
   service: 'gmail',
   user: 'bshanth0206@gmail.com',
-  pass: 'rjjnixxkftypgdx', // Removed spaces from app password
+  pass: 'rjjn ixsx kfty pgdx', // Removed spaces from app password
   adminEmail: 'bshanth0206@gmail.com',
   sendConfirmation: true
 };
 
-// Create transporter using hardcoded credentials
+
+// Create transporter using environment variables
 function createTransporter() {
   return nodemailer.createTransport({
-    service: EMAIL_CONFIG.service,
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: EMAIL_CONFIG.user,
-      pass: EMAIL_CONFIG.pass,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
+    tls: {
+      rejectUnauthorized: false
+    }
   });
 }
 
@@ -89,6 +96,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
 
   try {
+    // Validate environment variables
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.error('Missing email configuration');
+      const response: ApiResponse = {
+        success: false,
+        error: 'Email service not configured'
+      };
+      res.status(500).json(response);
+      return;
+    }
+
     // Validate request data
     const validation = validateReportData(req.body);
     if (!validation.isValid) {
@@ -107,8 +125,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
     // Email content
     const mailOptions = {
-      from: EMAIL_CONFIG.user,
-      to: EMAIL_CONFIG.adminEmail,
+      from: process.env.EMAIL_USER,
+      to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
       subject: `[SkillRack Tracker] Report from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -154,10 +172,10 @@ You can reply directly to this email to respond to ${name}.
     // Send email
     await transporter.sendMail(mailOptions);
 
-    // Send confirmation email to user
-    if (EMAIL_CONFIG.sendConfirmation) {
+    // Send confirmation email to user (optional)
+    if (process.env.SEND_CONFIRMATION === 'true') {
       const confirmationOptions = {
-        from: EMAIL_CONFIG.user,
+        from: process.env.EMAIL_USER,
         to: email,
         subject: 'Report Received - SkillRack Tracker',
         html: `
@@ -207,11 +225,20 @@ SkillRack Tracker Team
 
   } catch (error: any) {
     console.error('Error sending report email:', error);
+    console.error('Error details:', {
+      code: error.code,
+      response: error.response,
+      command: error.command
+    });
 
     let errorMessage = 'Failed to send report';
     
     if (error.code === 'EAUTH') {
-      errorMessage = 'Email authentication failed';
+      errorMessage = 'Email authentication failed. Please check your Gmail App Password settings.';
+      console.error('Authentication failed. Make sure:');
+      console.error('1. 2-factor authentication is enabled on Gmail');
+      console.error('2. App Password is generated for "Mail"');
+      console.error('3. App Password is correct and has spaces');
     } else if (error.code === 'ECONNECTION') {
       errorMessage = 'Unable to connect to email service';
     } else if (error.code === 'ETIMEDOUT') {
