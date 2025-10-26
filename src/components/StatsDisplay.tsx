@@ -3,12 +3,14 @@
  * Licensed under the MIT License
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import type { StatsDisplayProps } from '../types';
 import { ReportForm } from './index';
 import './StatsDisplay.css';
 
 const StatsDisplay: React.FC<StatsDisplayProps> = ({ profileData }) => {
+  const [languagesOpen, setLanguagesOpen] = useState(false);
+  const [certificatesOpen, setCertificatesOpen] = useState(false);
   const calculateCategoryPoints = () => {
     const { stats } = profileData;
     return {
@@ -215,39 +217,63 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ profileData }) => {
 
       {Object.keys(profileData.languages).length > 0 && (
         <div className="languages-section">
-          <h4>Programming Languages</h4>
-          <div className="languages-grid">
-            {Object.entries(profileData.languages).map(([language, count]) => (
-              <div key={language} className="language-item">
-                <span className="language-name">{language}</span>
-                <span className="language-count">{formatCount(count)}</span>
-              </div>
-            ))}
+          <div
+            className="section-header"
+            onClick={() => setLanguagesOpen(!languagesOpen)}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setLanguagesOpen(!languagesOpen)}
+            role="button"
+            tabIndex={0}
+            aria-expanded={languagesOpen}
+          >
+            <h4>Programming Languages</h4>
+            <span className={`dropdown-arrow ${languagesOpen ? 'open' : ''}`}>▼</span>
           </div>
+          {languagesOpen && (
+            <div className="languages-grid">
+              {Object.entries(profileData.languages).map(([language, count]) => (
+                <div key={language} className="language-item">
+                  <span className="language-name">{language}</span>
+                  <span className="language-count">{formatCount(count)}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
       {profileData.certificates.length > 0 && (
         <div className="certificates-section">
-          <h4>Certificates ({profileData.certificates.length})</h4>
-          <div className="certificates-list">
-            {profileData.certificates.map((cert, index) => (
-              <div key={index} className="certificate-item">
-                <div className="certificate-title">{cert.title}</div>
-                {cert.date && <div className="certificate-date">{cert.date}</div>}
-                {cert.link && (
-                  <a 
-                    href={cert.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="certificate-link"
-                  >
-                    View Certificate
-                  </a>
-                )}
-              </div>
-            ))}
+          <div
+            className="section-header"
+            onClick={() => setCertificatesOpen(!certificatesOpen)}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setCertificatesOpen(!certificatesOpen)}
+            role="button"
+            tabIndex={0}
+            aria-expanded={certificatesOpen}
+          >
+            <h4>Certificates ({profileData.certificates.length})</h4>
+            <span className={`dropdown-arrow ${certificatesOpen ? 'open' : ''}`}>▼</span>
           </div>
+          {certificatesOpen && (
+            <div className="certificates-list">
+              {profileData.certificates.map((cert, index) => (
+                <div key={index} className="certificate-item">
+                  <div className="certificate-title">{cert.title}</div>
+                  {cert.date && <div className="certificate-date">{cert.date}</div>}
+                  {cert.link && (
+                    <a 
+                      href={cert.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="certificate-link"
+                    >
+                      View Certificate
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
