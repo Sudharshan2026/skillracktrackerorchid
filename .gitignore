@@ -94,3 +94,4 @@ src/components/ui/tooltip.tsx
 # API duplicates and test files
 api/parse-profilesd.js
 src/api/test-parse-profile.js
+.env
