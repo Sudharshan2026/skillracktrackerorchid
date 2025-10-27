@@ -79,10 +79,10 @@ export default function ResultsHeader({
             color: '#000000',
             border: '1px solid #d1d5db',
           }}
-          onMouseEnter={(e) => {
+          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.currentTarget.style.backgroundColor = '#f3f4f6';
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.currentTarget.style.backgroundColor = '#ffffff';
           }}
         >
@@ -130,10 +130,10 @@ export default function ResultsHeader({
               color: '#000000',
               border: '1px solid #d1d5db',
             }}
-            onMouseEnter={(e) => {
+            onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.currentTarget.style.backgroundColor = '#f3f4f6';
             }}
-            onMouseLeave={(e) => {
+            onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.currentTarget.style.backgroundColor = '#ffffff';
             }}
           >
