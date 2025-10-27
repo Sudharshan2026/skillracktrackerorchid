@@ -3,7 +3,7 @@
  * Licensed under the MIT License
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { SkillRackProfile, GoalCalculation, ApiResponse } from './types';
 import { HomePage, ResultsPage, TempUserPage } from './components';
 import { useNavigation } from './hooks/useNavigation';
@@ -14,6 +14,30 @@ import './App.css';
  * Implements requirements 3.1, 3.2, 3.3, 3.4, 8.1, 8.2, 8.6 for stateless design and navigation
  */
 function App() {
+  // TEMPORARY: Force light mode for entire website
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    
+    // Watch for any attempts to add dark class and remove it
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+          }
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    
+    return () => observer.disconnect();
+  }, []);
+
   // Check if demo mode is enabled via URL parameter
   const urlParams = new URLSearchParams(window.location.search);
   const isDemoMode = urlParams.get('demo') === 'true';
