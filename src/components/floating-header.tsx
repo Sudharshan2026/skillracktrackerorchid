@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Grid2x2PlusIcon, MenuIcon } from 'lucide-react';
-import { Sheet, SheetContent } from '@/components/sheet';
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/sheet';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/utils/index';
 
@@ -76,6 +76,10 @@ export function FloatingHeader({ analyzedUrl, onGoHome, showPlan }: FloatingHead
                             showClose={false}
                             side="left"
                         >
+                            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                            <SheetDescription className="sr-only">
+                                Access navigation links and profile options
+                            </SheetDescription>
                             <div className="grid gap-y-2 overflow-y-auto px-4 pt-12 pb-5">
                                 <Button variant="outline" className="justify-start" onClick={onGoHome}>
                                     ← New Analysis

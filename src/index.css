@@ -40,6 +40,7 @@
     --transition-slow: 300ms ease-in-out;
   }
 
+  /* TEMPORARY: Dark theme disabled
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -69,6 +70,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
+  */
 }
 
 /* Keyframe Animations */
@@ -279,17 +281,16 @@ input:focus, textarea:focus, select:focus {
   }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* TEMPORARY: Forcing light theme styles directly instead of media query */
+:root {
+  color: #213547;
+  background-color: #ffffff;
+}
+a:hover {
+  color: #747bff;
+}
+button {
+  background-color: #f9f9f9;
 }
 
 /* Animation utility classes */

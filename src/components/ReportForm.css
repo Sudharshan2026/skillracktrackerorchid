@@ -207,7 +207,7 @@
   margin-top: 1.5rem;
 }
 
-/* Dark mode support */
+/* TEMPORARY: Dark mode support disabled
 @media (prefers-color-scheme: dark) {
   .report-modal-content {
     background: #1f2937;
@@ -253,6 +253,7 @@
     background-color: rgba(255, 255, 255, 0.1);
   }
 }
+*/
 
 /* Responsive design */
 @media (max-width: 640px) {

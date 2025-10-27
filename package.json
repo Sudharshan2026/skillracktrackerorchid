@@ -2,6 +2,7 @@
   "name": "skillrack-tracker",
   "private": false,
   "version": "0.0.0",
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
@@ -26,6 +27,7 @@
     "cheerio": "^1.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.11.17",
     "lucide-react": "^0.544.0",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.10.1",
