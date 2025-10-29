@@ -88,6 +88,10 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ profileData }) => {
               <span className="stat-value">{formatCount(profileData.stats.gold)}</span>
             </div>
             <div className="stat-item">
+              <span className="stat-label">Total Solved</span>
+              <span className="stat-value">{formatCount(profileData.stats.programsSolved)}</span>
+            </div>
+            <div className="stat-item">
               <span className="stat-label">🥈 Silver</span>
               <span className="stat-value">{formatCount(profileData.stats.silver)}</span>
             </div>
@@ -95,10 +99,10 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ profileData }) => {
               <span className="stat-label">🥉 Bronze</span>
               <span className="stat-value">{formatCount(profileData.stats.bronze)}</span>
             </div>
-            <div className="stat-item">
+            {/* <div className="stat-item">
               <span className="stat-label">Total Solved</span>
               <span className="stat-value">{formatCount(profileData.stats.programsSolved)}</span>
-            </div>
+            </div> */}
           </div>
         </div>
         
