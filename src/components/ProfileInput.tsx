@@ -44,7 +44,7 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ onSubmit, loading }) => {
     
     // Validate the cleaned URL first
     if (!validateUrl(cleanedUrl)) {
-      setError('Please enter a valid SkillRack profile URL (e.g., https://www.skillrack.com/profile/123456/abcdef)');
+      setError('Please enter a valid SkillRack profile URL (e.g., https://www.skillrack.com/profile/123456/abcdef or https://www.skillrack.com/faces/resume.xhtml?id=123456&key=abcdef)');
       return;
     }
 

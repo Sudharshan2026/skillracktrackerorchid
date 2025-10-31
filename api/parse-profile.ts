@@ -228,14 +228,23 @@ function preprocessApiUrl(rawUrl: string): string {
     cleanedUrl = cleanedUrl.replace('://skillrack.com', '://www.skillrack.com');
   }
   
-  // Convert profile URL to resume.xhtml format to bypass Cloudflare protection
-  // Transform: https://www.skillrack.com/profile/440943/bf966a469d73bfb792f4d2a72a4762937ba3fc48
-  // To: https://www.skillrack.com/faces/resume.xhtml?id=440943&key=bf966a469d73bfb792f4d2a72a4762937ba3fc48
-  const profileMatch = cleanedUrl.match(/https?:\/\/www\.skillrack\.com\/profile\/(\d+)\/([a-zA-Z0-9]+)/);
-  if (profileMatch) {
-    const [, profileId, profileKey] = profileMatch;
-    cleanedUrl = `https://www.skillrack.com/faces/resume.xhtml?id=${profileId}&key=${profileKey}`;
-    console.log(`Converted profile URL to resume format: ${cleanedUrl}`);
+  // Check if URL is already in resume.xhtml format
+  const resumeUrlPattern = /https?:\/\/www\.skillrack\.com\/faces\/resume\.xhtml/;
+  const isResumeUrl = resumeUrlPattern.test(cleanedUrl);
+  
+  if (isResumeUrl) {
+    // URL is already in resume.xhtml format, use it as-is
+    console.log(`URL is already in resume format: ${cleanedUrl}`);
+  } else {
+    // Convert profile URL to resume.xhtml format to bypass Cloudflare protection
+    // Transform: https://www.skillrack.com/profile/440943/bf966a469d73bfb792f4d2a72a4762937ba3fc48
+    // To: https://www.skillrack.com/faces/resume.xhtml?id=440943&key=bf966a469d73bfb792f4d2a72a4762937ba3fc48
+    const profileMatch = cleanedUrl.match(/https?:\/\/www\.skillrack\.com\/profile\/(\d+)\/([a-zA-Z0-9]+)/);
+    if (profileMatch) {
+      const [, profileId, profileKey] = profileMatch;
+      cleanedUrl = `https://www.skillrack.com/faces/resume.xhtml?id=${profileId}&key=${profileKey}`;
+      console.log(`Converted profile URL to resume format: ${cleanedUrl}`);
+    }
   }
   
   return cleanedUrl;
@@ -421,6 +430,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       } catch (error: any) {
         console.log(`Attempt ${attempt} failed:`, error.message);
         
+        // Check if this is a 404 or profile not found error
+        if (error.response?.status === 404 || 
+            error.response?.status === 410 ||
+            error.message?.includes('404') ||
+            error.message?.includes('Not Found')) {
+          // This is likely a non-existent profile, not a network issue
+          throw new Error('PROFILE_NOT_FOUND');
+        }
+        
         if (attempt === maxAttempts) {
           throw error;
         }
@@ -432,8 +450,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       throw new Error('Failed to get valid response after all retry attempts');
     }
     
+    // Check if we got a 404 response (profile not found)
+    if (axiosResponse.status === 404 || axiosResponse.status === 410) {
+      throw new Error('PROFILE_NOT_FOUND');
+    }
+    
+    // Check if the response content indicates profile not found
+    const responseText = axiosResponse.data;
+    if (typeof responseText === 'string' && (
+        responseText.includes('Your resume not found') ||
+        responseText.includes('Resume not found') ||
+        responseText.includes('Profile not found') ||
+        responseText.includes('User not found') ||
+        responseText.includes('404') ||
+        responseText.includes('Page not found')
+    )) {
+      throw new Error('PROFILE_NOT_FOUND');
+    }
+    
     // Parse the HTML and extract complete profile data
     const profileData = parseSkillRackProfile(axiosResponse.data);
+    
+    // Check if user exists - validate if we got meaningful data
+    if (!profileData.name || 
+        profileData.stats.rank === 0 || 
+        (profileData.stats.rank === 0 && 
+         profileData.stats.level === 0 && 
+         profileData.stats.programsSolved === 0 &&
+         profileData.stats.totalPoints === 0) ||
+        axiosResponse.data.includes('Your resume not found') ||
+        axiosResponse.data.includes('Resume not found')) {
+      
+      const response: ApiResponse = {
+        success: false,
+        error: 'User does not exist or profile is not accessible. Please check if the profile URL is correct and the profile is public.',
+        code: 'NOT_FOUND'
+      };
+      res.status(404).json(response);
+      return;
+    }
     
     const response: ApiResponse = {
       success: true,
@@ -447,7 +502,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     
     let errorResponse: ApiResponse;
     
-    if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+    // Check for profile not found first
+    if (error.message === 'PROFILE_NOT_FOUND') {
+      errorResponse = {
+        success: false,
+        error: 'User does not exist or profile is not accessible. Please check if the profile URL is correct and the profile is public.',
+        code: 'NOT_FOUND'
+      };
+    } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
       errorResponse = {
         success: false,
         error: 'Unable to connect to SkillRack. Please check your internet connection.',

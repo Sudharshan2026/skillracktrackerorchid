@@ -99,7 +99,7 @@ describe('ProfileInput Component', () => {
         await user.click(submitButton);
         
         expect(screen.getByTestId('validation-error')).toHaveTextContent(
-          'Please enter a valid SkillRack profile URL (e.g., https://skillrack.com/profile/123456/abcdef)'
+          'Please enter a valid SkillRack profile URL (e.g., https://www.skillrack.com/profile/123456/abcdef or https://www.skillrack.com/faces/resume.xhtml?id=123456&key=abcdef)'
         );
       }
     });

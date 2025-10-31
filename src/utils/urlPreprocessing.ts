@@ -68,8 +68,31 @@ export function preprocessUrl(rawUrl: string): UrlPreprocessingResult {
  * @returns True if the URL is a valid SkillRack profile URL
  */
 export function validateSkillRackUrl(url: string): boolean {
-  const skillrackPattern = /^https?:\/\/www\.skillrack\.com\/profile\/\d+\/[a-zA-Z0-9]+/;
-  return skillrackPattern.test(url);
+  try {
+    const urlObj = new URL(url);
+    
+    // Check if it's HTTP or HTTPS protocol
+    if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+      return false;
+    }
+    
+    // Check if it's a SkillRack domain with www subdomain
+    if (urlObj.hostname !== 'www.skillrack.com') {
+      return false;
+    }
+    
+    // Check if it matches either format:
+    // 1. Profile URL pattern: /profile/[id]/[hash]
+    // 2. Resume URL pattern: /faces/resume.xhtml?id=[id]&key=[hash]
+    const profilePathPattern = /^\/profile\/\d+\/[a-zA-Z0-9]+$/;
+    const resumePathPattern = /^\/faces\/resume\.xhtml$/;
+    const hasValidParams = urlObj.searchParams.has('id') && urlObj.searchParams.has('key');
+    
+    return profilePathPattern.test(urlObj.pathname) || 
+           (resumePathPattern.test(urlObj.pathname) && hasValidParams);
+  } catch {
+    return false;
+  }
 }
 
 /**
